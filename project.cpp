@@ -27,7 +27,7 @@ enum transaction_menu
   total_balance = 3,
   menu = 4
 };
-const string ClientsFileName = "Clients.txt";
+const string ClientsFileName = "clients.txt";
 
 struct sClient
 {
