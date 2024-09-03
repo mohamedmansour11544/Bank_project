@@ -8,6 +8,7 @@
 #include <thread>
 #include <chrono>
 using namespace std;
+const string ClientsFileName = "clients.txt";
 void Main();
 void TransactionMenu();
 enum EnChoicee
@@ -27,8 +28,6 @@ enum transaction_menu
   total_balance = 3,
   menu = 4
 };
-const string ClientsFileName = "clients.txt";
-
 struct sClient
 {
   string AccountNumber;
@@ -58,8 +57,8 @@ void WriteClientData_To_file(const string &filename, const string &line)
 vector<string> SplitString(const string &line, const string &delimiter)
 {
   vector<string> vstring;
-  short pos = 0;
   string word;
+  short pos = 0;
   string str = line;
   while ((pos = str.find(delimiter)) != string::npos)
   {
@@ -77,15 +76,6 @@ vector<string> SplitString(const string &line, const string &delimiter)
   return vstring;
 }
 
-string ConvertRecordToLine(const sClient &clientdata, const string &delimiter = "#//#")
-{
-  return clientdata.AccountNumber + delimiter +
-         clientdata.PinCode + delimiter +
-         clientdata.Name + delimiter +
-         clientdata.Phone + delimiter +
-         to_string(clientdata.AccountBalance);
-}
-
 sClient ConvertLineToRecord(const string &line, const string &separator = "#//#")
 {
   sClient client;
@@ -100,7 +90,15 @@ sClient ConvertLineToRecord(const string &line, const string &separator = "#//#"
   }
   return client;
 }
-
+string ConvertRecordToLine(const sClient &clientdata, const string &delimiter = "#//#")
+{
+  return clientdata.AccountNumber + delimiter +
+         clientdata.PinCode + delimiter +
+         clientdata.Name + delimiter +
+         clientdata.Phone + delimiter +
+         to_string(clientdata.AccountBalance);
+}
+// لحد دلوقتي دي حاجات طبيعيه والاتنين الي فوق دول عكس بعض بحول السطر لسجلات والسجلات لسطور
 vector<sClient> LoadDataFromFile(const string &filename)
 {
   vector<sClient> vsclient;
@@ -110,7 +108,7 @@ vector<sClient> LoadDataFromFile(const string &filename)
   if (myfile.is_open())
   {
     string line;
-    while (getline(myfile, line))
+    while (getline(myfile, line)) // طالما عمال اقرأ
     {
       sClient client = ConvertLineToRecord(line);
       // الفانكشن دي بتاخد السطر الي في الفايل الي بعد كل جزء فيه شفرات وتحوله الي ريكورد او سجلات مرتبه في ستراكتشر
@@ -137,6 +135,8 @@ void PrintClientData(const sClient &client)
        << "| " << setw(12) << left << client.Phone
        << "| " << setw(12) << left << client.AccountBalance;
 }
+
+// دي تبع transaction فقط
 void PrintClientDataFromTransaction(const sClient &client)
 {
   cout << "|" << setw(30) << left << client.AccountNumber
@@ -312,6 +312,7 @@ void DeleteClientData(vector<sClient> &vClients)
 
 sClient UpdateData()
 {
+  // طبعا الاكونت نمبر دا برايمري كاي مينفعش يتغير
   sClient data;
   cout << "Enter Pin Code: ";
   getline(cin >> ws, data.PinCode);
